@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <form>
+        <label for="domain">Domain: e.g. example.com</label><br>
+        <input type="text" name="domain" access="false" id="domain"><br>
+
+        <label for="date">Last date update</label><br>
+        <input type="month" name="date" access="false" id="date"><br>
+
+        <label for="words">Word seeds</label><br>
+        <input type="password" name="words" access="false" id="words"><br>
+        <input type="checkbox" name="showPassword" id="showPassword">Show Password<br>
+
+        <input type="checkbox" id="lowerLetter" name="lowerLetter" checked="true"   />
+        <label for="lowerLetter">A-Z</label><br />
+
+        <input type="checkbox" id="upperLetter" name="upperLetter" checked="true"   />
+        <label for="upperLetter">a-z</label><br />
+
+        <input type="checkbox" id="number" name="number" checked="true"   />
+        <label for="number">0-9</label><br />
+
+        <input type="checkbox" id="symbol1" name="symbol1" checked="true"   />
+        <label for="symbol1">!@#$%^&*()</label><br />
+
+        <input type="checkbox" id="symbol2" name="symbol2" checked="true"   />
+        <label for="symbol2">-=_+</label><br />
+
+        <label for="length">Password Length</label><br>
+        <input type="number" id="length" value="16" max="16" min="4"><br>
+
+        <label for="result">Password</label><br>
+        <input type="text" disabled="true" id="result"><br>
+
+        <button id="generate" type="button">Generate Password</button>
+    </form>
+</body>
+
+</html>
+

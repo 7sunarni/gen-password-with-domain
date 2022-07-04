@@ -1,0 +1,10 @@
+{
+    "name": "Generate Password",
+    "description": "Generate Password with domain name and word seeds",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+        "default_popup": "index.html"
+    },
+    "permissions":  ["storage", "activeTab", "scripting","tabs"]
+}
