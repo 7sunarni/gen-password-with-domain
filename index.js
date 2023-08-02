@@ -574,7 +574,7 @@ function copyToClipboard(string) {
         if (this.readyState == 4 && this.status == 200) {              
         }
     };
-    xhttp.open("POST", "api/host", true);
+    xhttp.open("POST", "api/date", true);
     xhttp.setRequestHeader('Content-type', 'application/json; charset=UTF-8')
     xhttp.send(post);
  }
