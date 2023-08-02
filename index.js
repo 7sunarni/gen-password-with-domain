@@ -484,7 +484,7 @@ function copyToClipboard(string) {
 
  function generatePassword() {
          
-     let _domain = document.getElementById("domain").value;
+     let _host = document.getElementById("host").value;
      let _date = document.getElementById("date").value;
      let _words = document.getElementById("words").value;
      let ll = "abcdefghijklmnopqrstuvwxyz";
@@ -512,9 +512,8 @@ function copyToClipboard(string) {
          buckets.push(s2);
      }
    
-    let _ret = password(buckets, _domain + _date + _words)
-
-    
+    let _ret = password(buckets, _host + _date + _words)
+    persist()
     let _len = document.getElementById("length").value;
     _ret = _ret.slice(0,_len);
     document.getElementById("result").value = _ret;
@@ -533,15 +532,64 @@ function copyToClipboard(string) {
     }
  }
 
+ function getHost(){
+    let alias = document.getElementById("alias").value;
+    if (alias === "") {
+        return 
+    }
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200 && this.responseText !== "" ) {
+        document.getElementById("host").value = this.responseText;
+        getLastUpdate()
+    }
+    };
+    xhttp.open("GET", "api/host?alias="+alias, true);
+    xhttp.send();
+ }
+
+ function getLastUpdate(){
+    let alias = document.getElementById("alias").value;
+    if (alias === "") {
+        return 
+    }
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200 && this.responseText !== "" ) {
+        document.getElementById("date").value = this.responseText; 
+    }
+    };
+    xhttp.open("GET", "api/date?alias="+alias, true);
+    xhttp.send();
+ }
+
+ function persist(){
+    let _alias = document.getElementById("alias").value;
+    let _host = document.getElementById("host").value;
+    let _date = document.getElementById("date").value;
+    let post = JSON.stringify({host: _host, alias:_alias, date: _date})
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {              
+        }
+    };
+    xhttp.open("POST", "api/host", true);
+    xhttp.setRequestHeader('Content-type', 'application/json; charset=UTF-8')
+    xhttp.send(post);
+ }
+
  window.addEventListener('load', function(evt) {
      document.getElementById("generate").addEventListener("click", generatePassword);
      document.getElementById("showPassword").addEventListener("click", showPassword);
+     document.getElementById("getHostByAlias").addEventListener("click", getHost);
+     document.getElementById("getLastUpdate").addEventListener("click", getLastUpdate);
      if (chrome && chrome.tabs){
         chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
             var tab = tabs[0];
             var url = new URL(tab.url)
-            var domain = url.hostname
-            document.getElementById("domain").value = domain;
+            var host = url.hostname
+            document.getElementById("host").value = host;
         });
      }
 
