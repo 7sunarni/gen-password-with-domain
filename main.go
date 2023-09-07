@@ -17,8 +17,12 @@ var workDir string
 
 func main() {
 	workDir = filepath.Dir(os.Args[0])
+	port := os.Getenv("HTTP_PORT")
+	if port == "" {
+		port = "38080"
+	}
 
-	http.ListenAndServe("0.0.0.0:38080", NewMixedHandler())
+	http.ListenAndServe("0.0.0.0:"+port, NewMixedHandler())
 }
 
 type MixedHandler struct {
