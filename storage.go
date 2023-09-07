@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"strings"
 	"sync"
 )
 
@@ -125,6 +126,7 @@ func (c *CSV) SetHostAlias(name string, alias string, date string) error {
 }
 
 func (c *CSV) GetHostByAlias(alias string) (string, error) {
+	alias = strings.ToLower(alias)
 	index := c.getIndex(alias)
 	if index == -1 {
 		return "", fmt.Errorf("%s not found", alias)
@@ -151,6 +153,7 @@ func (c *CSV) SetUpdateTime(host string, alias string, date string) error {
 }
 
 func (c *CSV) GetUpdateTime(alias string) (string, error) {
+	alias = strings.ToLower(alias)
 	index := c.getIndex(alias)
 	if index == -1 {
 		return "", fmt.Errorf("%s not found", alias)
