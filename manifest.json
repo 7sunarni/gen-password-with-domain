@@ -6,5 +6,5 @@
     "action": {
         "default_popup": "index.html"
     },
-    "permissions":  ["storage", "activeTab", "scripting","tabs"]
+    "permissions":  ["storage", "activeTab", "scripting", "tabs"]
 }

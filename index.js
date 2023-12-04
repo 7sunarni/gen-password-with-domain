@@ -513,7 +513,7 @@ function copyToClipboard(string) {
      }
    
     let _ret = password(buckets, _host + _date + _words)
-    persist()
+    saveConfig()
     let _len = document.getElementById("length").value;
     _ret = _ret.slice(0,_len);
     document.getElementById("result").value = _ret;
@@ -532,7 +532,7 @@ function copyToClipboard(string) {
     }
  }
 
- function getHost(){
+ function getByAPI(){
     let alias = document.getElementById("alias").value;
     if (alias === "") {
         return 
@@ -563,11 +563,70 @@ function copyToClipboard(string) {
     xhttp.send();
  }
 
- function persist(){
-    let _alias = document.getElementById("alias").value;
-    let _host = document.getElementById("host").value;
-    let _date = document.getElementById("date").value;
-    let post = JSON.stringify({host: _host, alias:_alias, date: _date})
+ function getConfig(){
+    if (chrome.runtime) {
+        let host = document.getElementById("host").value;
+        if (host === "") {
+            return
+        }
+        getByChromeExtension(host);
+        return
+    } 
+    // TODO: use web cache
+    getByAPI()
+ }
+
+ function saveConfig(){
+    let alias = document.getElementById("alias").value;
+    let host = document.getElementById("host").value;
+    let date = document.getElementById("date").value;
+    let lowerLetter = document.getElementById("lowerLetter").checked;
+    let upperLetter = document.getElementById("upperLetter").checked;
+    let number = document.getElementById("number").checked;
+    let symbol1 = document.getElementById("symbol1").checked;
+    let symbol2 = document.getElementById("symbol2").checked;
+
+    if (chrome.runtime) {
+        saveByChromeExtension(alias, host, date, lowerLetter, upperLetter, number, symbol1, symbol2);
+    } else {
+        saveByAPI(alias, host, date, lowerLetter, upperLetter, number, symbol1, symbol2)
+    }
+}
+
+function saveByChromeExtension(alias, host, date, ll, ul, number, s1, s2) {
+    let v = {}
+    v[host] = {
+        alias: alias,
+        host:host,
+        date:date,
+        ll:ll,
+        ul:ul,
+        number:number,
+        s1:s1,
+        s2:s2,
+    }
+    chrome.storage.local.set(v).then(()=>{
+    });
+}
+
+function getByChromeExtension(host) {
+    chrome.storage.local.get([host]).then((result) =>{
+        let config = result[host];
+        if (config.date !== ""){
+            document.getElementById("date").value = config.date;
+        }
+        document.getElementById("lowerLetter").checked = config.ll;
+        document.getElementById("upperLetter").checked = config.ul;
+        document.getElementById("number").checked = config.number;
+        document.getElementById("symbol1").checked = config.s1;
+        document.getElementById("symbol2").checked = config.s2;
+        return result
+    });
+}
+
+
+ function saveByAPI(alias, host, date, lowerLetter, upperLetter, number, symbol1, symbol2){
+    let post = JSON.stringify({host: host, alias:alias, date: date})
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -582,7 +641,7 @@ function copyToClipboard(string) {
  window.addEventListener('load', function(evt) {
      document.getElementById("generate").addEventListener("click", generatePassword);
      document.getElementById("showPassword").addEventListener("click", showPassword);
-     document.getElementById("getHostByAlias").addEventListener("click", getHost);
+     document.getElementById("getHostByAlias").addEventListener("click", getConfig);
      document.getElementById("getLastUpdate").addEventListener("click", getLastUpdate);
      if (chrome && chrome.tabs){
         chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
