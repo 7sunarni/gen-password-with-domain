@@ -8,31 +8,32 @@
 <body>
     <form>
         <label for="alias">Alias: e.g. example</label><br>
-        <input type="text" name="alias" access="false" id="alias"><button id="getHostByAlias" type="button">get-host</button><br>
+        <input type="text" name="alias" access="false" id="alias"><br>
 
         <label for="host">Host: e.g. example.com</label><br>
-        <input type="text" name="host" access="false" id="host"><button id="addAlias" type="button">add-alias</button><br>
+        <input type="text" name="host" access="false" id="host"><button id="getHostByAlias"
+            type="button">get-config</button><br>
 
         <label for="date">Last date update</label><br>
-        <input type="month" name="date" access="false" id="date"><button id="getLastUpdate" type="button">last-updated</button><br>
+        <input type="month" name="date" access="false" id="date"><br>
 
         <label for="words">Word seeds</label><br>
         <input type="password" name="words" access="false" id="words"><br>
         <input type="checkbox" name="showPassword" id="showPassword">Show Password<br>
 
-        <input type="checkbox" id="lowerLetter" name="lowerLetter" checked="true"   />
+        <input type="checkbox" id="lowerLetter" name="lowerLetter" checked="true" />
         <label for="lowerLetter">A-Z</label><br />
 
-        <input type="checkbox" id="upperLetter" name="upperLetter" checked="true"   />
+        <input type="checkbox" id="upperLetter" name="upperLetter" checked="true" />
         <label for="upperLetter">a-z</label><br />
 
-        <input type="checkbox" id="number" name="number" checked="true"   />
+        <input type="checkbox" id="number" name="number" checked="true" />
         <label for="number">0-9</label><br />
 
-        <input type="checkbox" id="symbol1" name="symbol1" checked="true"   />
+        <input type="checkbox" id="symbol1" name="symbol1" checked="true" />
         <label for="symbol1">!@#$%^&*()</label><br />
 
-        <input type="checkbox" id="symbol2" name="symbol2" checked="true"   />
+        <input type="checkbox" id="symbol2" name="symbol2" checked="true" />
         <label for="symbol2">-=_+</label><br />
 
         <label for="length">Password Length</label><br>
@@ -46,4 +47,3 @@
 </body>
 
 </html>
-

@@ -638,16 +638,26 @@ function getByChromeExtension(host) {
     xhttp.send(post);
  }
 
+ function isDomain(s){
+    return s.match(/[a-z]/i) !== null
+ }
+
+ function rootDomain(s){
+    return s.split('.').reverse().splice(0,2).reverse().join('.')
+ }
+
  window.addEventListener('load', function(evt) {
      document.getElementById("generate").addEventListener("click", generatePassword);
      document.getElementById("showPassword").addEventListener("click", showPassword);
      document.getElementById("getHostByAlias").addEventListener("click", getConfig);
-     document.getElementById("getLastUpdate").addEventListener("click", getLastUpdate);
      if (chrome && chrome.tabs){
         chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
             var tab = tabs[0];
             var url = new URL(tab.url)
             var host = url.hostname
+            if (isDomain(host)){
+                host = rootDomain(host)
+            }
             document.getElementById("host").value = host;
         });
      }
