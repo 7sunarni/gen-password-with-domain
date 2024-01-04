@@ -490,8 +490,8 @@ function copyToClipboard(string) {
      let ll = "abcdefghijklmnopqrstuvwxyz";
      let ul = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
      let n = "0123456789";
-     let s1 = "!@#$%^&*()";
-     let s2 = "~-=_+";
+     let s1 = "~!@#$^&*()-+";
+     let s2 = "%.^=_";
 
      let buckets = [];
 
