@@ -531,38 +531,7 @@ function copyToClipboard(string) {
       p.type = "password";
     }
  }
-
- function getByAPI(){
-    let alias = document.getElementById("alias").value;
-    if (alias === "") {
-        return 
-    }
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200 && this.responseText !== "" ) {
-        document.getElementById("host").value = this.responseText;
-        getLastUpdate()
-    }
-    };
-    xhttp.open("GET", "api/host?alias="+alias, true);
-    xhttp.send();
- }
-
- function getLastUpdate(){
-    let alias = document.getElementById("alias").value;
-    if (alias === "") {
-        return 
-    }
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200 && this.responseText !== "" ) {
-        document.getElementById("date").value = this.responseText; 
-    }
-    };
-    xhttp.open("GET", "api/date?alias="+alias, true);
-    xhttp.send();
- }
-
+ 
  function getConfig(){
     if (chrome.runtime) {
         let host = document.getElementById("host").value;
@@ -571,9 +540,8 @@ function copyToClipboard(string) {
         }
         getByChromeExtension(host);
         return
-    } 
-    // TODO: use web cache
-    getByAPI()
+    }
+    // TODO: use cookie
  }
 
  function saveConfig(){
@@ -588,9 +556,8 @@ function copyToClipboard(string) {
 
     if (chrome.runtime) {
         saveByChromeExtension(alias, host, date, lowerLetter, upperLetter, number, symbol1, symbol2);
-    } else {
-        saveByAPI(alias, host, date, lowerLetter, upperLetter, number, symbol1, symbol2)
     }
+    // TODO: use cookie
 }
 
 function saveByChromeExtension(alias, host, date, ll, ul, number, s1, s2) {
@@ -623,20 +590,6 @@ function getByChromeExtension(host) {
         return result
     });
 }
-
-
- function saveByAPI(alias, host, date, lowerLetter, upperLetter, number, symbol1, symbol2){
-    let post = JSON.stringify({host: host, alias:alias, date: date})
-
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {              
-        }
-    };
-    xhttp.open("POST", "api/date", true);
-    xhttp.setRequestHeader('Content-type', 'application/json; charset=UTF-8')
-    xhttp.send(post);
- }
 
  function isDomain(s){
     return s.match(/[a-z]/i) !== null
