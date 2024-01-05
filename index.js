@@ -533,7 +533,7 @@ function copyToClipboard(string) {
  }
  
  function getConfig(){
-    if (chrome.runtime) {
+    if ( typeof chrome !== "undefined" && chrome && chrome.runtime) {
         let host = document.getElementById("host").value;
         if (host === "") {
             return
@@ -554,7 +554,7 @@ function copyToClipboard(string) {
     let symbol1 = document.getElementById("symbol1").checked;
     let symbol2 = document.getElementById("symbol2").checked;
 
-    if (chrome.runtime) {
+    if ( typeof chrome !== "undefined" && chrome && chrome.runtime) {
         saveByChromeExtension(alias, host, date, lowerLetter, upperLetter, number, symbol1, symbol2);
     }
     // TODO: use cookie
