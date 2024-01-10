@@ -553,14 +553,15 @@ function copyToClipboard(string) {
     let number = document.getElementById("number").checked;
     let symbol1 = document.getElementById("symbol1").checked;
     let symbol2 = document.getElementById("symbol2").checked;
+    let length = document.getElementById("length").value;
 
     if ( typeof chrome !== "undefined" && chrome && chrome.runtime) {
-        saveByChromeExtension(alias, host, date, lowerLetter, upperLetter, number, symbol1, symbol2);
+        saveByChromeExtension(alias, host, date, lowerLetter, upperLetter, number, symbol1, symbol2, length);
     }
     // TODO: use cookie
 }
 
-function saveByChromeExtension(alias, host, date, ll, ul, number, s1, s2) {
+function saveByChromeExtension(alias, host, date, ll, ul, number, s1, s2, length) {
     let v = {}
     v[host] = {
         alias: alias,
@@ -571,6 +572,7 @@ function saveByChromeExtension(alias, host, date, ll, ul, number, s1, s2) {
         number:number,
         s1:s1,
         s2:s2,
+        length: length,
     }
     chrome.storage.local.set(v).then(()=>{
     });
@@ -587,6 +589,7 @@ function getByChromeExtension(host) {
         document.getElementById("number").checked = config.number;
         document.getElementById("symbol1").checked = config.s1;
         document.getElementById("symbol2").checked = config.s2;
+        document.getElementById("length").value = config.length;
         return result
     });
 }
