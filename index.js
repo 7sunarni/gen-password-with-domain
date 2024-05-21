@@ -603,6 +603,13 @@ function getByChromeExtension(host) {
  }
 
  window.addEventListener('load', function(evt) {
+     document.addEventListener("keypress", function (event) {
+        console.log("keypress", event)
+        // Check if the enter key is pressed
+        if (event.code === "Enter" || event.key === "Enter") {
+            generatePassword();
+        }
+     });
      document.getElementById("generate").addEventListener("click", generatePassword);
      document.getElementById("showPassword").addEventListener("click", showPassword);
      document.getElementById("getHostByAlias").addEventListener("click", getConfig);
