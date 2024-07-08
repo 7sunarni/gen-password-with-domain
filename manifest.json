@@ -1,10 +1,18 @@
 {
     "name": "Generate Password",
-    "description": "Generate Password with domain name and word seeds",
+    "description": "Generate your password with domain name, month and your recover words",
     "version": "1.0",
     "manifest_version": 3,
     "action": {
         "default_popup": "index.html"
+    },
+    "commands": {
+        "_execute_action": {
+            "suggested_key": {
+                "default": "Alt+Shift+P",
+                "mac": "MacCtrl+Command+P"
+            }
+        }
     },
     "permissions":  ["storage", "activeTab", "scripting", "tabs"]
 }
