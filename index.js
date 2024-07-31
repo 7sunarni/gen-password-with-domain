@@ -521,6 +521,31 @@ function copyToClipboard(string) {
     if  (navigator && navigator.clipboard && navigator.clipboard.writeText){
         navigator.clipboard.writeText(_ret);
     }
+    if (typeof chrome !== "undefined" && chrome && chrome.tabs) {
+        chrome.tabs.query(
+            {
+                active: true,
+                currentWindow: true,
+            },
+            (tabs) => {
+                if (tabs.length > 1) {
+                    return;
+                }
+                const tabId = tabs[0].id;
+                chrome.scripting.executeScript({
+                    target: { tabId: tabId },
+                    func: (args) => {
+                        let passwords_elements = document.getElementsByName("password");
+                        if (passwords_elements.length > 1) {
+                            return
+                        }
+                        passwords_elements[0].value = args;
+                    },
+                    args: [_ret]
+                })
+            }
+        );
+    }
  }
 
  function showPassword() {
