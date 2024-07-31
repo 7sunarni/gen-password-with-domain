@@ -535,7 +535,9 @@ function copyToClipboard(string) {
                 chrome.scripting.executeScript({
                     target: { tabId: tabId },
                     func: (args) => {
-                        let passwords_elements = document.getElementsByName("password");
+                        let passwords_elements = document.querySelectorAll(
+                            'input[type="password"]',
+                        );
                         if (passwords_elements.length > 1) {
                             return
                         }
