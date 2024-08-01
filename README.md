@@ -64,3 +64,8 @@ function password(buckets, raw) {
 ```
 all code is simple, in line 65 get domain + date(year-mouth) + words, then md5 it.
 and line 22-24 to make sure password has each item selected(A-Z,a-z ...)
+
+## Get password config
+```javascript
+chrome.storage.local.get(null, function(key){console.log(key)})
+```
