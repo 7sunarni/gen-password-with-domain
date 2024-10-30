@@ -22,7 +22,10 @@ func main() {
 		port = "38080"
 	}
 
-	http.ListenAndServe("0.0.0.0:"+port, NewMixedHandler())
+	if _, err := os.Stat("/etc/letsencrypt/live/7sunarni.reborn.tk/fullchain.pem"); !os.IsExist(err) {
+		http.ListenAndServe("0.0.0.0:"+port, NewMixedHandler())
+	}
+	http.ListenAndServeTLS("0.0.0.0:443", "/etc/letsencrypt/live/7sunarni.reborn.tk/fullchain.pem", "/etc/letsencrypt/live/7sunarni.reborn.tk/privkey.pem", NewMixedHandler())
 }
 
 type MixedHandler struct {
@@ -98,6 +101,31 @@ func (m *MixedHandler) date(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf("%s method not allowed", r.RequestURI)))
 }
 
+func (m *MixedHandler) upload(w http.ResponseWriter, r *http.Request) {
+	file, header, err := r.FormFile("file")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	defer file.Close()
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	if strings.Contains(header.Filename, "/") {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+	if err := ioutil.WriteFile(path.Join(workDir, header.Filename), data, os.ModePerm); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+}
+
 func NewMixedHandler() http.Handler {
 	mux := http.DefaultServeMux
 	s, err := NewCSV("csv.db")
@@ -110,6 +138,7 @@ func NewMixedHandler() http.Handler {
 	}
 	mux.HandleFunc("/api/host", handler.host)
 	mux.HandleFunc("/api/date", handler.date)
+	mux.HandleFunc("/api/upload", handler.upload)
 	handler.mux = mux
 	return handler
 }
