@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"fmt"
 	"os"
+	"path"
 	"strings"
 	"sync"
 )
@@ -44,7 +45,7 @@ func (c *CSV) save() error {
 	c.writeLock.Lock()
 	defer c.writeLock.Unlock()
 
-	f, err := os.OpenFile(workDir+c.fileName, os.O_RDWR|os.O_CREATE, os.ModePerm)
+	f, err := os.OpenFile(path.Join(workDir, c.fileName), os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		return err
 	}
