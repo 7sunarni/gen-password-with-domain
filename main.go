@@ -22,10 +22,10 @@ func main() {
 		port = "38080"
 	}
 
-	if _, err := os.Stat("/etc/letsencrypt/live/7sunarni.reborn.tk/fullchain.pem"); !os.IsExist(err) {
+	if err := http.ListenAndServeTLS("0.0.0.0:443", "/etc/letsencrypt/live/7sunarni.reborn.tk/fullchain.pem", "/etc/letsencrypt/live/7sunarni.reborn.tk/privkey.pem", NewMixedHandler()); err != nil {
 		http.ListenAndServe("0.0.0.0:"+port, NewMixedHandler())
+
 	}
-	http.ListenAndServeTLS("0.0.0.0:443", "/etc/letsencrypt/live/7sunarni.reborn.tk/fullchain.pem", "/etc/letsencrypt/live/7sunarni.reborn.tk/privkey.pem", NewMixedHandler())
 }
 
 type MixedHandler struct {
