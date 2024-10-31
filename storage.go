@@ -45,6 +45,7 @@ func (c *CSV) save() error {
 	c.writeLock.Lock()
 	defer c.writeLock.Unlock()
 
+	// FIXME:
 	f, err := os.OpenFile(path.Join(workDir, c.fileName), os.O_RDWR|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		return err

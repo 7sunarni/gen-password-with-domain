@@ -101,6 +101,7 @@ func (m *MixedHandler) date(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf("%s method not allowed", r.RequestURI)))
 }
 
+// TODO: clear file
 func (m *MixedHandler) upload(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("file")
 	if err != nil {
@@ -119,11 +120,14 @@ func (m *MixedHandler) upload(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		return
 	}
-	if err := ioutil.WriteFile(path.Join(workDir, header.Filename), data, os.ModePerm); err != nil {
+	fileName := "temp-" + header.Filename
+	if err := ioutil.WriteFile(path.Join(workDir, fileName), data, os.ModePerm); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		return
 	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fileName))
 }
 
 func NewMixedHandler() http.Handler {
