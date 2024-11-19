@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <textarea id="content" style="width: 400px; height: 100px;margin: 5px"></textarea>
+</body>
+<script>
+    const content = document.getElementById('content');
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200 && this.responseText !== "") {
+            content.value = this.responseText;
+        }
+    };
+    xhttp.open("GET", "api/cp", true);
+    xhttp.send();
+
+    content.addEventListener('keyup', function (event) {
+        let post = JSON.stringify({content: content.value})
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+            }
+        };
+        xhttp.open("POST", "api/cp", true);
+        xhttp.setRequestHeader('Content-type', 'application/json; charset=UTF-8')
+        xhttp.send(post);
+    });
+
+</script>
+
+</html>

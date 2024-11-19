@@ -29,8 +29,9 @@ func main() {
 }
 
 type MixedHandler struct {
-	mux     *http.ServeMux
-	storage Storage
+	mux              *http.ServeMux
+	storage          Storage
+	copyPasteContent string
 }
 
 func (m *MixedHandler) host(w http.ResponseWriter, r *http.Request) {
@@ -137,12 +138,14 @@ func NewMixedHandler() http.Handler {
 		log.Fatal(err)
 	}
 	handler := &MixedHandler{
-		mux:     mux,
-		storage: s,
+		mux:              mux,
+		storage:          s,
+		copyPasteContent: "",
 	}
 	mux.HandleFunc("/api/host", handler.host)
 	mux.HandleFunc("/api/date", handler.date)
 	mux.HandleFunc("/api/upload", handler.upload)
+	mux.HandleFunc("/api/cp", handler.cp)
 	handler.mux = mux
 	return handler
 }
@@ -185,4 +188,26 @@ func (m *MixedHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	m.mux.ServeHTTP(w, r)
+}
+
+func (m *MixedHandler) cp(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(m.copyPasteContent))
+		return
+	}
+	if r.Method == http.MethodPost {
+		data := make(map[string]string)
+		if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		content := data["content"]
+		if content != "" {
+			m.copyPasteContent = content
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+	}
 }
