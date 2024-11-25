@@ -5,7 +5,9 @@
 </head>
 
 <body>
-    <textarea id="content" style="width: 400px; height: 100px;margin: 5px"></textarea>
+    <div class="container">
+        <textarea id="content"></textarea>
+    </div>
 </body>
 <script>
     const content = document.getElementById('content');
@@ -19,7 +21,7 @@
     xhttp.send();
 
     content.addEventListener('keyup', function (event) {
-        let post = JSON.stringify({content: content.value})
+        let post = JSON.stringify({ content: content.value })
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
@@ -31,5 +33,18 @@
     });
 
 </script>
+<style>
+    .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 80vh;
+    }
+
+    #content {
+        width: 80%;
+        height: 60%;
+    }
+</style>
 
 </html>
