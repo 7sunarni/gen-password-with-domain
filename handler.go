@@ -189,10 +189,8 @@ func (m *MixedHandler) cp(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		content := data["content"]
-		if content != "" {
-			m.copyPasteContent = content
-			w.WriteHeader(http.StatusOK)
-			return
-		}
+		m.copyPasteContent = content
+		w.WriteHeader(http.StatusOK)
+		return
 	}
 }
