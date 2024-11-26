@@ -20,7 +20,19 @@
     xhttp.open("GET", "api/cp", true);
     xhttp.send();
 
-    content.addEventListener('keyup', function (event) {
+    function debounce(func, wait) {
+        let timeout;
+        return function () {
+            const context = this;
+            const args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(function () {
+                func.apply(context, args);
+            }, wait);
+        };
+    }
+
+    function updateContent(event) {
         let post = JSON.stringify({ content: content.value })
         let xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -30,7 +42,10 @@
         xhttp.open("POST", "api/cp", true);
         xhttp.setRequestHeader('Content-type', 'application/json; charset=UTF-8')
         xhttp.send(post);
-    });
+    }
+
+    const debouncedSetContent = debounce(updateContent, 500);
+    content.addEventListener('keyup', debouncedSetContent);
 
 </script>
 <style>
