@@ -17,7 +17,7 @@
             content.value = this.responseText;
         }
     };
-    xhttp.open("GET", "api/cp", true);
+    xhttp.open("GET", "api/text", true);
     xhttp.send();
 
     function debounce(func, wait) {
@@ -39,7 +39,7 @@
             if (this.readyState == 4 && this.status == 200) {
             }
         };
-        xhttp.open("POST", "api/cp", true);
+        xhttp.open("POST", "api/text", true);
         xhttp.setRequestHeader('Content-type', 'application/json; charset=UTF-8')
         xhttp.send(post);
     }

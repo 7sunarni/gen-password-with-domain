@@ -88,7 +88,7 @@ func (m *MixedHandler) date(w http.ResponseWriter, r *http.Request) {
 }
 
 // TODO: clear file
-func (m *MixedHandler) upload(w http.ResponseWriter, r *http.Request) {
+func (m *MixedHandler) file(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("file")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -129,8 +129,8 @@ func NewMixedHandler() http.Handler {
 	}
 	mux.HandleFunc("/api/host", handler.host)
 	mux.HandleFunc("/api/date", handler.date)
-	mux.HandleFunc("/api/upload", handler.upload)
-	mux.HandleFunc("/api/cp", handler.cp)
+	mux.HandleFunc("/api/file", handler.file)
+	mux.HandleFunc("/api/text", handler.text)
 	handler.mux = mux
 	return handler
 }
@@ -175,7 +175,7 @@ func (m *MixedHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	m.mux.ServeHTTP(w, r)
 }
 
-func (m *MixedHandler) cp(w http.ResponseWriter, r *http.Request) {
+func (m *MixedHandler) text(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(m.copyPasteContent))
