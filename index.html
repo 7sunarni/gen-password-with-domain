@@ -12,7 +12,7 @@
 
         <label for="host">Host: e.g. example.com</label><br>
         <input type="text" name="host" access="false" id="host"><button id="getHostByAlias"
-            type="button">get-config</button><br>
+            type="button">Get Config</button><br>
 
         <label for="date">Last date update</label><br>
         <input type="month" name="date" access="false" id="date"><br>
@@ -43,6 +43,21 @@
         <input type="text" disabled="true" id="result"><br>
 
         <button id="generate" type="button">Generate Password</button>
+
+        <details>
+            <summary>Config</summary>
+            <div style="display: flex; gap: 5px;">
+                <button id="clear" type="button">Rmv</button>
+                <button id="export" type="button">Expt</button>
+                <button id="import" type="button">Impt</button>
+            </div>
+            <div class="popup-overlay" id="popupOverlay">
+                <div class="popup" id="popup">
+                    <span class="close" id="closePopup" >X</span>
+                    <textarea id="configData" style="width: 80%;"></textarea>
+                </div>
+            </div>
+        </details>
     </form>
 </body>
 

@@ -560,15 +560,52 @@ function copyToClipboard(string) {
  }
  
  function getConfig(){
-    if ( typeof chrome !== "undefined" && chrome && chrome.runtime) {
-        let host = document.getElementById("host").value;
-        if (host === "") {
-            return
-        }
-        getByChromeExtension(host);
+    if (!isChromeExtension()){
         return
     }
+    let host = document.getElementById("host").value;
+    if (host === "") {
+        return
+    }
+    getByChromeExtension(host);
+    return
     // TODO: use cookie
+ }
+
+
+ function clearConfigs(){
+    if (!isChromeExtension()){
+        return
+    }
+    chrome.storage.local.clear().then((result) => {});
+ }
+
+ function exportConfigs(){
+    if (!isChromeExtension()){
+        return
+    }
+    chrome.storage.local.get(null, function(items) {
+        var out = JSON.stringify(items);
+        document.getElementById("popupOverlay").style.display = "block";
+        document.getElementById("configData").value = out;
+    });
+ }
+
+ function importConfigs(){
+    if (!isChromeExtension()){
+        return
+    }
+    document.getElementById("popupOverlay").style.display = "block";
+    var data = document.getElementById("configData").value;
+    if (data && data!==""){
+        var items = JSON.parse(data);
+        chrome.storage.local.set(items).then(()=>{
+        });
+    }
+ }
+
+ function isChromeExtension(){
+    return typeof chrome !== "undefined" && chrome && chrome.runtime
  }
 
  function saveConfig(){
@@ -608,7 +645,7 @@ function saveByChromeExtension(alias, host, date, ll, ul, number, s1, s2, length
 function getByChromeExtension(host) {
     chrome.storage.local.get([host]).then((result) =>{
         let config = result[host];
-        if (config.date !== ""){
+        if (config && config.date !== ""){
             document.getElementById("date").value = config.date;
         }
         document.getElementById("lowerLetter").checked = config.ll;
@@ -640,6 +677,14 @@ function getByChromeExtension(host) {
      document.getElementById("generate").addEventListener("click", generatePassword);
      document.getElementById("showPassword").addEventListener("click", showPassword);
      document.getElementById("getHostByAlias").addEventListener("click", getConfig);
+     document.getElementById("clear").addEventListener("click", clearConfigs);
+     document.getElementById("export").addEventListener("click", exportConfigs);
+     document.getElementById("import").addEventListener("click", importConfigs);
+
+     document.getElementById("popupOverlay").style.display = "none";
+     document.getElementById("closePopup").onclick = function() {
+        document.getElementById("popupOverlay").style.display = "none";
+     };
      if (chrome && chrome.tabs){
         chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
             var tab = tabs[0];
@@ -650,7 +695,5 @@ function getByChromeExtension(host) {
             }
             document.getElementById("host").value = host;
         });
-     }
-
-     
+     }     
  });
