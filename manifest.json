@@ -14,5 +14,10 @@
             }
         }
     },
-    "permissions":  ["storage", "activeTab", "scripting", "tabs"]
+    "permissions": [
+        "storage",
+        "activeTab",
+        "scripting",
+        "tabs"
+    ]
 }
