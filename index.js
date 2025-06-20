@@ -542,6 +542,7 @@ function generatePassword() {
                             return
                         }
                         passwords_elements[0].value = args;
+                        passwords_elements[0].text = args;
                     },
                     args: [_ret]
                 })
