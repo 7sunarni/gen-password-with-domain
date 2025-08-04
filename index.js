@@ -562,6 +562,11 @@ function showPassword() {
 
 function getConfig() {
     if (!isChromeExtension()) {
+        let alias = document.getElementById("alias").value;
+        if (alias === "") {
+            return
+        }
+        getByAPI(alias);
         return
     }
     let host = document.getElementById("host").value;
@@ -620,9 +625,10 @@ function saveConfig() {
     let symbol2 = document.getElementById("symbol2").checked;
     let length = document.getElementById("length").value;
 
-    if (typeof chrome !== "undefined" && chrome && chrome.runtime) {
+    if (isChromeExtension()) {
         saveByChromeExtension(alias, host, date, lowerLetter, upperLetter, number, symbol1, symbol2, length);
     }
+    saveByAPI(alias, host, date, lowerLetter, upperLetter, number, symbol1, symbol2, length)
     // TODO: use cookie
 }
 
@@ -643,6 +649,39 @@ function saveByChromeExtension(alias, host, date, ll, ul, number, s1, s2, length
     });
 }
 
+function saveByAPI(alias, host, date, ll, ul, number, s1, s2, length) {
+    fetch('api', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            alias: alias,
+            host: host,
+            date: date,
+            ll: ll,
+            ul: ul,
+            number: number,
+            s1: s1,
+            s2: s2,
+            length: length,
+        })
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+
+}
+
 function getByChromeExtension(host) {
     chrome.storage.local.get([host]).then((result) => {
         let config = result[host];
@@ -657,6 +696,40 @@ function getByChromeExtension(host) {
         document.getElementById("length").value = config.length;
         return result
     });
+}
+
+
+function getByAPI(alias) {
+    fetch("api?alias=" + alias)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            response.json().then(items => {
+                if (!items) {
+                    return
+                }
+                for (let i = 0; i < items.length; i++) {
+                    let item = items[i];
+                    if (item.alias === alias) {
+                        document.getElementById("lowerLetter").checked = item.ll;
+                        document.getElementById("upperLetter").checked = item.ul;
+                        document.getElementById("number").checked = item.number;
+                        document.getElementById("symbol1").checked = item.s1;
+                        document.getElementById("symbol2").checked = item.s2;
+                        document.getElementById("length").value = item.length;
+                        document.getElementById("date").value = item.date;
+                        document.getElementById("host").value = item.host;
+                        break;
+                    }
+                }
+            });
+        })
+        .then(data => {
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
 }
 
 function isDomain(s) {
